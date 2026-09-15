@@ -5,10 +5,13 @@ import Lenis from 'lenis';
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Inicializamos Lenis de forma nativa
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      // lerp: Define la fricción/inercia. 
+      // 0.05 es ultra suave (Apple), 0.1 es un poco más rápido. 0.07 es el punto dulce.
+      lerp: 0.07, 
+      wheelMultiplier: 1, // Sensibilidad de la rueda del mouse
+      smoothWheel: true,  // Activa la física de inercia
+      touchMultiplier: 2, // Lo hace más responsivo en trackpads y celulares
     });
 
     function raf(time: number) {
@@ -18,7 +21,6 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 
     requestAnimationFrame(raf);
 
-    // Limpiamos la instancia al desmontar para evitar bugs de memoria
     return () => {
       lenis.destroy();
     };
