@@ -103,7 +103,7 @@ export default function EminentPage() {
             <div className="md:col-span-8 flex flex-col gap-6">
               {/* Banner ancho arriba */}
               <div className="h-[250px] md:h-[350px] rounded-[16px] overflow-hidden shadow-xl bg-white transition-transform duration-500 hover:scale-[1.02]">
-                <img src="/eminent/PREV_BANNER-WEB.PNG" alt="App Banner" className="w-full h-full object-cover object-left" />
+                <img src="/eminent/PREV_BANNER-WEB.png" alt="App Banner" className="w-full h-full object-cover object-left" />
               </div>
               
               {/* Dos cards abajo */}
@@ -112,7 +112,7 @@ export default function EminentPage() {
                   <img src="/eminent/PREV_BANNER-MOBILE.jpg" alt="App Card 1" className="w-full h-full object-cover" />
                 </div>
                 <div className="h-[250px] md:h-auto rounded-[16px] overflow-hidden shadow-xl bg-white transition-transform duration-500 hover:scale-[1.02]">
-                  <img src="/eminent/PREV_BENEFICIOS_SIZEOK.PNG" alt="App Card 2" className="w-full h-full object-cover" />
+                  <img src="/eminent/PREV_BENEFICIOS_SIZEOK.png" alt="App Card 2" className="w-full h-full object-cover" />
                 </div>
               </div>
             </div>
