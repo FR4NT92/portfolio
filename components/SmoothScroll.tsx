@@ -1,15 +1,14 @@
 "use client";
 
+import React from 'react';
 import { ReactLenis } from '@studio-freight/react-lenis';
 
-// 1. Desvinculamos los tipos estrictos de la librería renombrándola como "any"
-const Lenis = ReactLenis as any;
-
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
-  return (
-    // 2. Usamos nuestra versión libre de tipos
-    <Lenis root>
-      {children}
-    </Lenis>
+  // Construimos el componente con JS puro. 
+  // TypeScript no puede escanear esto como un componente de React estricto.
+  return React.createElement(
+    ReactLenis as any, 
+    { root: true }, 
+    children
   );
 }
