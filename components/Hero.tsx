@@ -4,97 +4,102 @@ import { motion } from "framer-motion";
 import { useRef } from "react";
 
 export default function Hero() {
-const heroRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div ref={heroRef} className="relative w-full h-screen overflow-hidden bg-black">
+    // Contenedor principal con padding para generar el "box"
+    <div className="w-full h-screen bg-[#111] p-3 md:p-6 pb-0">
       
-      {/* VIDEO BACKGROUND */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-80"
-      >
-        <source src="/VID-HERO.mp4" type="video/mp4" />
-      </video>
+      {/* CAJA DEL HERO (Redondeada y con overflow oculto) */}
+      <div ref={heroRef} className="relative w-full h-full rounded-[32px] md:rounded-[40px] overflow-hidden bg-black shadow-2xl">
+        
+        {/* VIDEO BACKGROUND */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0 opacity-80"
+        >
+          <source src="/VID-HERO.mp4" type="video/mp4" />
+        </video>
 
-      {/* STICKER ARRASTRABLE (Draggable) */}
-      <motion.div
-        drag
-        dragConstraints={heroRef}
-        dragElastic={0.2}
-        initial={{ opacity: 0, scale: 0, rotate: -45 }}
-        animate={{ opacity: 1, scale: 1, rotate: -15 }}
-        transition={{ duration: 1, delay: 1, type: "spring", bounce: 0.5 }}
-        className="absolute z-30 cursor-grab active:cursor-grabbing"
-        // Posicionado inicialmente sobre la letra A de Francisco
-        style={{ top: "35%", right: "15%", width: "140px" }}
-      >
-        <img src="/sticker.png" alt="Sticker Francisco" className="w-full h-auto drop-shadow-2xl pointer-events-none" />
-      </motion.div>
+        {/* STICKER ARRASTRABLE */}
+        <motion.div
+          drag
+          dragConstraints={heroRef}
+          dragElastic={0.2}
+          initial={{ opacity: 0, scale: 0, rotate: -45 }}
+          animate={{ opacity: 1, scale: 1, rotate: -15 }}
+          transition={{ duration: 1, delay: 1, type: "spring", bounce: 0.5 }}
+          className="absolute z-30 cursor-grab active:cursor-grabbing"
+          style={{ top: "30%", right: "15%", width: "120px" }}
+        >
+          <img src="/sticker.png" alt="Sticker Francisco" className="w-full h-auto drop-shadow-[0_10px_15px_rgba(0,0,0,0.5)] pointer-events-none" />
+        </motion.div>
 
-      {/* TEXTOS */}
-      <div className="absolute right-[5%] md:right-[60px] top-[45%] -translate-y-1/2 flex flex-col items-end z-10 pointer-events-none">
-        <motion.h1 
+        {/* TEXTOS (Alineación restaurada) */}
+        <div className="absolute right-[5%] md:right-[80px] top-[45%] -translate-y-1/2 flex flex-col items-end z-10 pointer-events-none">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
+            className="text-[60px] md:text-[90px] lg:text-[110px] font-black text-white leading-none tracking-[-2px] mb-4"
+          >
+            FRANCISCO.
+          </motion.h1>
+          
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="flex flex-col items-end"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-10 h-[1px] bg-white/70"></span>
+              <p className="text-white/90 text-[16px] md:text-[18px] font-light">
+                Diseño & Comunicación Visual
+              </p>
+            </div>
+            <p className="text-white/60 text-[12px] md:text-[13px] font-medium tracking-[1.5px] uppercase mt-1">
+              Freelance
+            </p>
+          </motion.div>
+        </div>
+
+        {/* BOTÓN LIQUID GLASS ESTILO APPLE */}
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
-          className="text-[60px] md:text-[90px] lg:text-[110px] font-black text-white leading-none tracking-[-2px] mb-4"
+          transition={{ duration: 1, delay: 0.5 }}
+          className="absolute bottom-[8%] md:bottom-[60px] right-[5%] md:right-[80px] z-20"
         >
-          FRANCISCO.
-        </motion.h1>
-        
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="flex flex-col items-end"
-        >
-          <div className="flex items-center gap-3">
-            <span className="w-10 h-[1px] bg-white/70"></span>
-            <p className="text-white/90 text-[16px] md:text-[18px] font-light">
-              Diseño & Comunicación Visual
-            </p>
-          </div>
-          <p className="text-white/60 text-[12px] md:text-[13px] font-medium tracking-[1.5px] uppercase mt-1">
-            Freelance
-          </p>
+          <a 
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=frantruppa@gmail.com" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex items-center gap-3 transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:gap-0 cursor-pointer"
+          >
+            <div className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:opacity-100 bg-white/5 backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_24px_rgba(0,0,0,0.15)] pointer-events-none"></div>
+
+            <div className="relative w-[54px] h-[54px] flex items-center justify-center z-10">
+              <div className="absolute inset-0 rounded-full transition-opacity duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:opacity-0 bg-white/5 backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_24px_rgba(0,0,0,0.15)]"></div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white transition-transform duration-[600ms] group-hover:scale-110">
+                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+            </div>
+
+            <div className="relative h-[54px] px-7 flex items-center z-10">
+              <div className="absolute inset-0 rounded-full transition-opacity duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:opacity-0 bg-white/5 backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_24px_rgba(0,0,0,0.15)]"></div>
+              <span className="relative z-10 text-white text-[12px] font-semibold tracking-[2px] uppercase">
+                Contacto
+              </span>
+            </div>
+          </a>
         </motion.div>
+
       </div>
-
-      {/* BOTÓN LIQUID GLASS ESTILO APPLE */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.5 }}
-        className="absolute bottom-[15%] md:bottom-[120px] right-[5%] md:right-[60px] z-20"
-      >
-        <a 
-          href="https://mail.google.com/mail/?view=cm&fs=1&to=frantruppa@gmail.com" 
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group relative flex items-center gap-3 transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:gap-0 cursor-pointer"
-        >
-          <div className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:opacity-100 bg-white/5 backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_24px_rgba(0,0,0,0.15)] pointer-events-none"></div>
-
-          <div className="relative w-[54px] h-[54px] flex items-center justify-center z-10">
-            <div className="absolute inset-0 rounded-full transition-opacity duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:opacity-0 bg-white/5 backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_24px_rgba(0,0,0,0.15)]"></div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white transition-transform duration-[600ms] group-hover:scale-110">
-              <rect width="20" height="16" x="2" y="4" rx="2"/>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-            </svg>
-          </div>
-
-          <div className="relative h-[54px] px-7 flex items-center z-10">
-            <div className="absolute inset-0 rounded-full transition-opacity duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:opacity-0 bg-white/5 backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_24px_rgba(0,0,0,0.15)]"></div>
-            <span className="relative z-10 text-white text-[12px] font-semibold tracking-[2px] uppercase">
-              Contacto
-            </span>
-          </div>
-        </a>
-      </motion.div>
-
     </div>
   );
 }
