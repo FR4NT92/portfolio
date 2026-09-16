@@ -7,13 +7,12 @@ export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
 
   return (
-    // Contenedor principal con padding para generar el "box"
-    <div className="w-full h-screen bg-[#111] p-3 md:p-6 pb-0">
+    // Contenedor principal transparente para revelar el bg global
+    <div className="w-full h-screen bg-transparent p-3 md:p-6 pb-0">
       
-      {/* CAJA DEL HERO (Redondeada y con overflow oculto) */}
+      {/* CAJA DEL HERO */}
       <div ref={heroRef} className="relative w-full h-full rounded-[32px] md:rounded-[40px] overflow-hidden bg-black shadow-2xl">
         
-        {/* VIDEO BACKGROUND */}
         <video
           autoPlay
           loop
@@ -24,7 +23,6 @@ export default function Hero() {
           <source src="/VID-HERO.mp4" type="video/mp4" />
         </video>
 
-        {/* STICKER ARRASTRABLE */}
         <motion.div
           drag
           dragConstraints={heroRef}
@@ -38,7 +36,6 @@ export default function Hero() {
           <img src="/sticker.png" alt="Sticker Francisco" className="w-full h-auto drop-shadow-[0_10px_15px_rgba(0,0,0,0.5)] pointer-events-none" />
         </motion.div>
 
-        {/* TEXTOS (Alineación restaurada) */}
         <div className="absolute right-[5%] md:right-[80px] top-[45%] -translate-y-1/2 flex flex-col items-end z-10 pointer-events-none">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -67,7 +64,6 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* BOTÓN LIQUID GLASS ESTILO APPLE */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
