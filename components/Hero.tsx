@@ -52,7 +52,7 @@ export default function Hero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.5 }}
-        className="absolute bottom-[5%] md:bottom-[75px] right-[5%] md:right-[75px] z-20"
+        className="absolute bottom-[5%] md:bottom-[90px] right-[5%] md:right-[90px] z-20"
       >
         <a 
           href="mailto:frantruppa@gmail.com" 
