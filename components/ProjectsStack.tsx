@@ -35,7 +35,7 @@ export default function ProjectsStack() {
         <div className="w-full md:w-[45%] relative md:sticky md:top-[100px] md:pr-5">
           <h2 className="text-[48px] md:text-[60px] font-black tracking-[-1.5px] mb-6 leading-none">Projects.</h2>
           <p className="text-[14px] leading-[1.6] font-medium max-w-[340px] mb-5 text-[#333]">
-            A lo largo de los años colaboré en diversos proyectos como diseñador freelance, creando piezas de comunicación a medida para cada cliente.
+            A lo largo de los años colaboré en diversos proyectos como diseñador, creando piezas de comunicación a medida para cada cliente.
           </p>
           <p className="text-[14px] leading-[1.6] font-medium max-w-[340px] mb-5 text-[#333]">
             El objetivo siempre es el mismo: que cada propuesta represente y potencie la identidad de la marca.
