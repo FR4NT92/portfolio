@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     // CAMBIO CLAVE: -mt-[35vh] empata con las tarjetas. La página muere exactamente acá.
-    <div className="relative z-[100] bg-[#1a1a1a] -mt-[35vh] rounded-t-[32px] pt-[80px] px-[20px] md:px-[40px] pb-[30px] md:pb-[40px] shadow-2xl flex flex-col justify-between">
+    <div className="relative z-30 bg-[#1a1a1a] -mt-[35vh] rounded-t-[32px] pt-[80px] px-[20px] md:px-[40px] pb-[30px] md:pb-[40px] shadow-2xl flex flex-col justify-between">
       
       <div className="text-left md:text-right mb-[50px] md:mb-[60px]">
         <h3 className="text-[22px] md:text-[26px] font-medium max-w-[600px] md:ml-auto leading-[1.4] text-[#999]">
