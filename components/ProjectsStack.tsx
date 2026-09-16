@@ -11,25 +11,23 @@ const projects = [
   { id: 'baron-b', title: 'Baron B', bg: '/BARON.jpg', logo: '/BARON-LOGO.png' },
 ];
 
-// Mapeo exacto de la ubicación de cada card simulando tu boceto
 const layout = [
-  { finalX: 80, finalY: -130, rotate: 6, zIndex: 10 },    // Supervielle (Arriba Der)
-  { finalX: -140, finalY: -20, rotate: -8, zIndex: 20 },  // Eminent (Medio Izq)
-  { finalX: 90, finalY: 10, rotate: -4, zIndex: 15 },     // Yerba (Medio Der)
-  { finalX: -80, finalY: 140, rotate: 5, zIndex: 30 },    // Rotoplas (Abajo Izq)
-  { finalX: 120, finalY: 160, rotate: -6, zIndex: 25 },   // Baron B (Abajo Der)
+  { finalX: 80, finalY: -130, rotate: 6, zIndex: 10 },
+  { finalX: -140, finalY: -20, rotate: -8, zIndex: 20 },
+  { finalX: 90, finalY: 10, rotate: -4, zIndex: 15 },
+  { finalX: -80, finalY: 140, rotate: 5, zIndex: 30 },
+  { finalX: 120, finalY: 160, rotate: -6, zIndex: 25 },
 ];
 
-// Sub-componente para vincular independientemente cada card al scroll
 function ScrollLinkedCard({ proj, index, progress }: { proj: any, index: number, progress: any }) {
-  // Define cuándo empieza y termina de caer cada card (efecto cascada)
+  // Cascading effect: cada carta arranca un instante más tarde que la anterior
   const start = index * 0.12;
-  const end = start + 0.25;
+  const end = start + 0.3;
 
-  // Sincronización milimétrica con el scroll: Caen desde 1000px arriba
-  const y = useTransform(progress, [start, end], [-1000, layout[index].finalY]);
-  const scale = useTransform(progress, [start, end], [1.4, 1]); // Se achican al "estamparse"
-  const opacity = useTransform(progress, [start, start + 0.1], [0, 1]);
+  // Caen desde Y: -1200 (oculto) hasta su posición en el clúster
+  const y = useTransform(progress, [start, end], [-1200, layout[index].finalY]);
+  const scale = useTransform(progress, [start, end], [1.5, 1]); 
+  const opacity = useTransform(progress, [start, start + 0.05], [0, 1]);
 
   return (
     <motion.div
@@ -39,7 +37,7 @@ function ScrollLinkedCard({ proj, index, progress }: { proj: any, index: number,
         rotate: layout[index].rotate,
         zIndex: layout[index].zIndex
       }}
-      className="absolute w-[240px] md:w-[320px] aspect-[4/3] rounded-[16px] overflow-hidden border-[4px] md:border-[6px] border-white/90 bg-white shadow-2xl hover:!z-50 transition-shadow"
+      className="absolute w-[240px] md:w-[320px] aspect-[4/3] rounded-[16px] overflow-hidden border-[4px] md:border-[6px] border-white/90 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:!z-50 transition-shadow"
     >
       <a href={`/proyecto/${proj.id}`} className="block w-full h-full relative group cursor-pointer">
         <div 
@@ -61,23 +59,17 @@ function ScrollLinkedCard({ proj, index, progress }: { proj: any, index: number,
 export default function ProjectsStack() {
   const sectionRef = useRef<HTMLDivElement>(null);
   
-  // Capturamos el progreso del scroll de todo este contenedor inmenso
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"]
   });
 
   return (
-    // Altura de 300vh para dar "pista" al scroll y permitir que las animaciones ocurran
-    <div 
-      ref={sectionRef} 
-      className="relative h-[300vh] bg-[#111] w-full bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: "url('/bg.png')" }}
-    >
-      {/* Contenedor pegajoso (sticky) que sostiene la vista mientras bajás */}
-      <div className="sticky top-0 h-screen w-full flex flex-col md:flex-row items-center justify-between max-w-[1400px] mx-auto px-[20px] md:px-[80px]">
+    <div ref={sectionRef} className="relative h-[250vh] w-full bg-transparent">
+      
+      {/* EL ENMASCARAMIENTO (overflow-hidden): Evita que las cartas invadan el Hero */}
+      <div className="sticky top-0 h-screen w-full flex flex-col md:flex-row items-center justify-between max-w-[1400px] mx-auto px-[20px] md:px-[80px] overflow-hidden">
         
-        {/* COLUMNA IZQUIERDA: Textos originales en su lugar */}
         <div className="w-full md:w-[40%] mt-20 md:mt-0 text-white z-10">
           <h2 className="text-[50px] md:text-[70px] font-black tracking-[-1.5px] mb-6 leading-none">Projects.</h2>
           <p className="text-[14px] md:text-[15px] leading-[1.6] font-light max-w-[400px] mb-5 text-white/80">
@@ -88,7 +80,6 @@ export default function ProjectsStack() {
           </p>
         </div>
 
-        {/* COLUMNA DERECHA: El clúster donde colisionan las cards */}
         <div className="w-full md:w-[60%] h-[60vh] md:h-full relative flex items-center justify-center">
           {projects.map((proj, i) => (
             <ScrollLinkedCard 
