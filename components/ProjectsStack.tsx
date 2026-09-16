@@ -11,54 +11,54 @@ const projects = [
   { id: 'baron-b', title: 'Baron B', bg: '/BARON.jpg', logo: '/BARON-LOGO.png' },
 ];
 
-// Coordenadas relativas al centro del clúster (offsetX, offsetY)
+// Coordenadas relativas al centro exacto de la pantalla derecha
 const layout = [
-  { offsetX: 80, offsetY: -120, rotate: 6, zIndex: 10 },
+  { offsetX: 100, offsetY: -120, rotate: 6, zIndex: 10 },
   { offsetX: -120, offsetY: -40, rotate: -8, zIndex: 20 },
-  { offsetX: 100, offsetY: 20, rotate: -4, zIndex: 15 },
-  { offsetX: -80, offsetY: 130, rotate: 5, zIndex: 30 },
-  { offsetX: 120, offsetY: 150, rotate: -6, zIndex: 25 },
+  { offsetX: 110, offsetY: 20, rotate: -4, zIndex: 15 },
+  { offsetX: -90, offsetY: 140, rotate: 5, zIndex: 30 },
+  { offsetX: 130, offsetY: 160, rotate: -6, zIndex: 25 },
 ];
 
-// Sub-componente arquitectónico: separa el Scroll del Drag para no romper las físicas
-function ImmersiveCard({ proj, index, progress }: { proj: any, index: number, progress: any }) {
-  // Tiempos de entrada: escalonados
+// Arquitectura de 3 capas para aislar Scroll, Escala y Mouse
+function ImmersiveCard({ proj, index, progress, constraintsRef }: { proj: any, index: number, progress: any, constraintsRef: any }) {
+  // Tiempos escalonados para que caigan una por una
   const start = index * 0.15;
   const end = start + 0.25;
 
-  // EFECTO CÁMARA (Z-Axis Push)
-  // Viene desde scale 2.5 (cerca de tu cara) a 1 (posición final)
-  const scale = useTransform(progress, [start, end], [2.5, 1]);
+  // EFECTO INMERSIVO: Vienen desde el tamaño 3 (cerca de la cámara) a 1 (posición final)
+  const scale = useTransform(progress, [start, end], [3, 1]);
   
-  // La clave de la limpieza: la carta SOLO empieza a verse cuando ya está por aterrizar (start + 0.1).
-  // Esto evita que las cajas invisibles gigantes borren las cartas que ya están en la mesa.
-  const opacity = useTransform(progress, [start + 0.1, end], [0, 1]);
+  // OPACIDAD ACELERADA: Pasan de 0 a 100% de solidez muy rápido (en 0.08 pasos) para no verse translúcidas.
+  const opacity = useTransform(progress, [start, start + 0.08], [0, 1]);
+  
+  // CANDADO DE CLICS: La carta es intocable (none) hasta que aterriza (auto). Evita secuestros de links.
+  const pointerEvents = useTransform(progress, (v) => v >= end ? "auto" : "none");
 
   return (
-    // Capa 1: Punto de origen exacto en el centro del espacio derecho
-    <div className="absolute top-1/2 left-1/2 pointer-events-none z-[${layout[index].zIndex}]">
+    // Capa 1: Contenedor estático flex para centrado sin afectar físicas
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
       
-      {/* Capa 2: Maneja EXCLUSIVAMENTE el Scroll y posicionamiento estático */}
+      {/* Capa 2: Responde al Scroll de la página */}
       <motion.div
         style={{
           scale,
           opacity,
           x: layout[index].offsetX,
           y: layout[index].offsetY,
+          zIndex: layout[index].zIndex, // Las capas no se mezclan
+          pointerEvents // Candado activado
         }}
-        // -translate para centrar el eje de la carta
-        className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        className="relative"
       >
-        {/* Capa 3: Maneja EXCLUSIVAMENTE el Drag y la Rotación */}
+        {/* Capa 3: Responde a la mano del usuario (Drag interactivo) */}
         <motion.div
           drag
-          // El "corralito": límites magnéticos en píxeles para que no salgan disparadas
-          dragConstraints={{ top: -150, bottom: 150, left: -150, right: 150 }}
+          dragConstraints={constraintsRef} // Limita el arrastre para que no se pierdan
           dragElastic={0.1}
           whileDrag={{ scale: 1.05, zIndex: 99 }}
           style={{ rotate: layout[index].rotate }}
-          // Reborde sutil: border-[2px] border-white/80
-          className="pointer-events-auto w-[240px] md:w-[320px] aspect-[4/3] rounded-[16px] overflow-hidden border-[2px] md:border-[3px] border-white/80 bg-white shadow-[0_15px_40px_rgba(0,0,0,0.5)] cursor-grab active:cursor-grabbing hover:!z-50"
+          className="w-[240px] md:w-[320px] aspect-[4/3] rounded-[16px] overflow-hidden border-[2px] border-white/80 bg-white shadow-[0_15px_40px_rgba(0,0,0,0.5)] cursor-grab active:cursor-grabbing hover:!z-50"
         >
           <a href={`/proyecto/${proj.id}`} className="block w-full h-full relative group">
             <div 
@@ -81,6 +81,7 @@ function ImmersiveCard({ proj, index, progress }: { proj: any, index: number, pr
 
 export default function ProjectsStack() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const clusterRef = useRef<HTMLDivElement>(null);
   
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -103,14 +104,15 @@ export default function ProjectsStack() {
           </p>
         </div>
 
-        {/* CLÚSTER DERECHO */}
-        <div className="w-full md:w-[60%] h-full relative">
+        {/* ZONA DE CARTAS CON LIMITADOR FÍSICO */}
+        <div ref={clusterRef} className="w-full md:w-[60%] h-full relative">
           {projects.map((proj, i) => (
             <ImmersiveCard 
               key={proj.id} 
               proj={proj} 
               index={i} 
               progress={scrollYProgress} 
+              constraintsRef={clusterRef}
             />
           ))}
         </div>
