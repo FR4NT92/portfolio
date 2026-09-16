@@ -46,7 +46,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* 2. BOTÓN LIQUID GLASS ESTILO APPLE (Ingeniería de solapamiento) */}
+      {/* 2. BOTÓN LIQUID GLASS ESTILO APPLE (Ingeniería de Crossfade) */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -57,33 +57,28 @@ export default function Hero() {
           href="https://mail.google.com/mail/?view=cm&fs=1&to=frantruppa@gmail.com" 
           target="_blank"
           rel="noopener noreferrer"
-          /* Quitamos el 'gap' para controlar la separación con márgenes exactos */
-          className="group flex items-center cursor-pointer"
+          // El gap-3 separa las burbujas inicialmente. Al hacer hover, se atraen.
+          className="group relative flex items-center gap-3 transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:gap-0 cursor-pointer"
         >
           
-          {/* Gotita 1: Ícono (Tiene z-10 para quedar por encima y tapar la costura) */}
-          <div 
-            className="relative z-10 w-[54px] h-[54px] rounded-full flex items-center justify-center
-                       bg-white/10 backdrop-blur-2xl border border-white/20 
-                       shadow-[inset_0_1px_2px_rgba(255,255,255,0.5),_0_8px_32px_rgba(0,0,0,0.2)]
-                       transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] 
-                       group-hover:rounded-r-none group-hover:border-r-transparent group-hover:bg-white/20"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+          {/* LA FUSIÓN LÍQUIDA: Este es el cristal maestro. Está oculto y aparece al hacer hover envolviendo todo sin cortes. */}
+          <div className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:opacity-100 bg-white/5 backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_24px_rgba(0,0,0,0.15)] pointer-events-none"></div>
+
+          {/* PARTE 1: Burbuja del Ícono */}
+          <div className="relative w-[54px] h-[54px] flex items-center justify-center z-10">
+            {/* El cristal individual que desaparece al fusionarse */}
+            <div className="absolute inset-0 rounded-full transition-opacity duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:opacity-0 bg-white/5 backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_24px_rgba(0,0,0,0.15)]"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white transition-transform duration-[600ms] group-hover:scale-110">
               <rect width="20" height="16" x="2" y="4" rx="2"/>
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
             </svg>
           </div>
 
-          {/* Gotita 2: Texto (Tiene ml-3 de separación inicial. Al hacer hover pasa a -ml-[1px] forzando una colisión perfecta) */}
-          <div 
-            className="relative z-0 h-[54px] px-8 rounded-full flex items-center 
-                       bg-white/10 backdrop-blur-2xl border border-white/20 
-                       shadow-[inset_0_1px_2px_rgba(255,255,255,0.5),_0_8px_32px_rgba(0,0,0,0.2)]
-                       ml-3 transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] 
-                       group-hover:-ml-[1px] group-hover:rounded-l-none group-hover:border-l-transparent group-hover:bg-white/20"
-          >
-            <span className="text-white text-[12px] font-semibold tracking-[2px] uppercase">
+          {/* PARTE 2: Burbuja de Texto */}
+          <div className="relative h-[54px] px-7 flex items-center z-10">
+            {/* El cristal individual que desaparece al fusionarse */}
+            <div className="absolute inset-0 rounded-full transition-opacity duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:opacity-0 bg-white/5 backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_24px_rgba(0,0,0,0.15)]"></div>
+            <span className="relative z-10 text-white text-[12px] font-semibold tracking-[2px] uppercase">
               Contacto
             </span>
           </div>
