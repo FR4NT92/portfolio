@@ -17,7 +17,7 @@ export default function Hero() {
         <source src="/VID-HERO.mp4" type="video/mp4" />
       </video>
 
-      {/* 1. TEXTOS */}
+      {/* 1. TEXTOS (Ubicación intacta) */}
       <div className="absolute right-[5%] md:right-[60px] top-[45%] -translate-y-1/2 flex flex-col items-end z-10">
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
@@ -46,32 +46,45 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* 2. BOTÓN (Actualizado a URL web de Gmail) */}
+      {/* 2. BOTÓN LIQUID GLASS ESTILO APPLE (Elevado para más aire) */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.5 }}
-        className="absolute bottom-[5%] md:bottom-[75px] right-[5%] md:right-[75px] z-20"
+        // Elevamos el bottom a 120px en desktop y 15% en mobile
+        className="absolute bottom-[15%] md:bottom-[120px] right-[5%] md:right-[60px] z-20"
       >
         <a 
-          /* Enlace directo a la interfaz de redacción de Gmail */
           href="https://mail.google.com/mail/?view=cm&fs=1&to=frantruppa@gmail.com" 
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex items-center gap-3 transition-all duration-[500ms] ease-[cubic-bezier(0.32,0.72,0,1)] hover:gap-0 cursor-pointer"
+          // gap-4 inicial para separar las gotas. Al hacer hover, el gap colapsa a 0 forzando la fusión.
+          className="group flex items-center gap-4 transition-all duration-[700ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:gap-0 cursor-pointer"
         >
           
-          {/* Parte 1: Burbuja del Ícono */}
-          <div className="w-[50px] h-[50px] rounded-full border border-white/30 bg-white/5 backdrop-blur-md flex items-center justify-center transition-all duration-[500ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:rounded-r-none group-hover:border-r-transparent group-hover:bg-white/15">
+          {/* Gotita 1: Ícono */}
+          <div 
+            className="w-[54px] h-[54px] rounded-full flex items-center justify-center
+                       bg-white/5 backdrop-blur-2xl border border-white/20 
+                       shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_32px_rgba(0,0,0,0.1)]
+                       transition-all duration-[700ms] ease-[cubic-bezier(0.4,0,0.2,1)] 
+                       group-hover:rounded-r-none group-hover:border-r-transparent group-hover:bg-white/10"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white">
               <rect width="20" height="16" x="2" y="4" rx="2"/>
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
             </svg>
           </div>
 
-          {/* Parte 2: Burbuja de Texto */}
-          <div className="h-[50px] px-6 rounded-full border border-white/30 bg-white/5 backdrop-blur-md flex items-center transition-all duration-[500ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:rounded-l-none group-hover:border-l-transparent group-hover:bg-white/15">
-            <span className="text-white text-[11px] font-medium tracking-[2px] uppercase">
+          {/* Gotita 2: Texto */}
+          <div 
+            className="h-[54px] px-8 rounded-full flex items-center 
+                       bg-white/5 backdrop-blur-2xl border border-white/20 
+                       shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_32px_rgba(0,0,0,0.1)]
+                       transition-all duration-[700ms] ease-[cubic-bezier(0.4,0,0.2,1)] 
+                       group-hover:rounded-l-none group-hover:border-l-transparent group-hover:bg-white/10"
+          >
+            <span className="text-white text-[12px] font-medium tracking-[2.5px] uppercase">
               Contacto
             </span>
           </div>
