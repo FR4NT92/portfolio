@@ -26,16 +26,17 @@ export default function ProjectsStack() {
     'md:top-[175px]', 'md:top-[200px]', 'md:top-[225px]'
   ];
 
-  // Z-indexes explícitos para que el compilador de Tailwind no los ignore
+  // Z-indexes bajos para que queden encapsulados y el Footer los pueda tapar
   const zIndexes = ['z-[1]', 'z-[2]', 'z-[3]', 'z-[4]', 'z-[5]', 'z-[6]'];
 
   return (
     <div 
       ref={containerRef} 
-      // pb-[50vh] es VITAL: permite que la última card espere pegada mientras sube el Footer
-      className="pt-[80px] px-[20px] md:px-[40px] pb-[50vh] w-full"
+      // z-0 encapsula esta sección. Es fundamental para que no pelee con el footer.
+      className="relative z-0 bg-[#e6e6e6] -mt-[60px] rounded-t-[32px] pt-[80px] px-[20px] md:px-[40px]"
     >
-      <section className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start gap-10">
+      {/* Volvemos al pb-[35vh] original para no generar vacíos extraños */}
+      <section className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start gap-10 pb-[35vh]">
         
         <div className="w-full md:w-[45%] relative md:sticky md:top-[100px] md:pr-5">
           <h2 className="text-[48px] md:text-[60px] font-black tracking-[-1.5px] mb-6 leading-none">Projects.</h2>
@@ -62,6 +63,7 @@ export default function ProjectsStack() {
                 className={`
                   relative md:sticky aspect-[4/3] rounded-[16px] overflow-hidden 
                   border-[6px] border-white bg-white w-full transform-gpu origin-top
+                  /* ELIMINADO el last:mb-0. Ahora la card 6 tiene margen y puede solapar a la 5 */
                   mb-[25px] md:mb-[25vh]
                   ${stickyTops[i]} ${zIndexes[i]}
                 `}
