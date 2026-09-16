@@ -1,18 +1,14 @@
 import Hero from "@/components/Hero";
 import ProjectsStack from "@/components/ProjectsStack";
-import Carousel from "@/components/Carousel";
 import Footer from "@/components/Footer";
-import SmoothScroll from "@/components/SmoothScroll";
 
 export default function Home() {
   return (
-    <SmoothScroll>
-      <main className="w-full bg-[#e6e6e6] overflow-hidden">
-        <Hero />
-        <ProjectsStack />
-        <Carousel />
-        <Footer />
-      </main>
-    </SmoothScroll>
+    // Agregamos bg-[#1a1a1a] al fondo general por si hay rebote en Safari, no se vea blanco
+    <main className="bg-[#1a1a1a]">
+      <Hero />
+      <ProjectsStack />
+      <Footer />
+    </main>
   );
 }
