@@ -5,7 +5,8 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <main 
-      className="w-full min-h-screen bg-[#111] overflow-hidden bg-cover bg-center bg-fixed"
+      // ELIMINADO el overflow-hidden que rompía el anclaje (sticky)
+      className="w-full min-h-screen bg-[#111] bg-cover bg-center bg-fixed"
       style={{ backgroundImage: "url('/bg.png')" }}
     >
       <Hero />
