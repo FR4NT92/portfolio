@@ -10,8 +10,7 @@ const projects = [
   { id: 'yerba-mate', title: 'Yerba Mate Argentina', bg: '/YERBA.png', logo: '/YERBA-LOGO.png' },
   { id: 'rotoplas', title: 'Rotoplas', bg: '/ROTOPLAS.jpg', logo: '/ROTOPLAS-LOGO.png' },
   { id: 'baron-b', title: 'Baron B', bg: '/BARON.jpg', logo: '/BARON-LOGO.png' },
-  // Le agregamos la propiedad isComingSoon. Acá en "bg" definís la ruta de tu portada.
-  { id: 'reels', title: 'REELS', bg: '/REELS.png', text: 'REELS', isComingSoon: true },
+  { id: 'reels', title: 'REELS', bg: '/REELS.jpg', text: 'REELS', isComingSoon: true },
 ];
 
 export default function ProjectsStack() {
@@ -27,12 +26,19 @@ export default function ProjectsStack() {
     'md:top-[175px]', 'md:top-[200px]', 'md:top-[225px]'
   ];
 
+  // Declaración explícita para que Tailwind asigne correctamente las capas
+  const zIndexes = [
+    'z-[10]', 'z-[20]', 'z-[30]', 'z-[40]', 'z-[50]', 'z-[60]'
+  ];
+
   return (
     <div 
       ref={containerRef} 
-      className="relative z-20 bg-[#e6e6e6] -mt-[60px] rounded-t-[32px] pt-[80px] px-[20px] md:px-[40px]"
+      // Bajamos a z-10 para que el footer (que le pondremos z-50) pase por arriba
+      className="relative z-10 bg-[#e6e6e6] -mt-[60px] rounded-t-[32px] pt-[80px] px-[20px] md:px-[40px]"
     >
-      <section className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start gap-10 pb-[35vh]">
+      {/* Aumentamos a pb-[80vh] para que la card 6 tenga pista de scroll suficiente para llegar arriba */}
+      <section className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start gap-10 pb-[80vh]">
         
         <div className="w-full md:w-[45%] relative md:sticky md:top-[100px] md:pr-5">
           <h2 className="text-[48px] md:text-[60px] font-black tracking-[-1.5px] mb-6 leading-none">Projects.</h2>
@@ -60,11 +66,10 @@ export default function ProjectsStack() {
                   relative md:sticky aspect-[4/3] rounded-[16px] overflow-hidden 
                   border-[6px] border-white bg-white w-full transform-gpu origin-top
                   mb-[25px] md:mb-[25vh] last:mb-0
-                  ${stickyTops[i]} z-[${i + 1}]
+                  ${stickyTops[i]} ${zIndexes[i]}
                 `}
               >
                 {proj.isComingSoon ? (
-                  // VERSIÓN BLOQUEADA (Sin Link, sin hover, cursor bloqueado)
                   <div className="block w-full h-full relative cursor-not-allowed">
                     <div 
                       className="absolute -inset-[2px] bg-cover bg-center brightness-[0.5] grayscale-[30%]"
@@ -78,7 +83,6 @@ export default function ProjectsStack() {
                     </div>
                   </div>
                 ) : (
-                  // VERSIÓN ACTIVA (Con Link y efectos hover)
                   <Link href={`/proyecto/${proj.id}`} className="block w-full h-full relative group cursor-pointer">
                     <div 
                       className="absolute -inset-[2px] bg-cover bg-center brightness-[0.65] transition-all duration-[1200ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.03] group-hover:blur-[5px] group-hover:brightness-[0.4]"
