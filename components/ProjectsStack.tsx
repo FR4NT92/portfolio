@@ -3,43 +3,30 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
+// Lista unificada: Datos + Coordenadas exactas para evitar errores de compilación
 const projects = [
-  { id: 'supervielle', title: 'Supervielle', bg: '/SUPERVIELLE.jpg', logo: '/SUPERVIELLE-LOGO.png' },
-  { id: 'eminent', title: 'Éminent', bg: '/EMINENT.jpg', logo: '/EMINENT-LOGO.png' },
-  { id: 'yerba-mate', title: 'Yerba Mate Argentina', bg: '/YERBA.png', logo: '/YERBA-LOGO.png' },
-  { id: 'rotoplas', title: 'Rotoplas', bg: '/ROTOPLAS.jpg', logo: '/ROTOPLAS-LOGO.png' },
-  { id: 'baron-b', title: 'Baron B', bg: '/BARON.jpg', logo: '/BARON-LOGO.png' },
-];
-
-// Coordenadas finales exactas (Eje X, Eje Y, Rotación y Capa) para armar tu maqueta
-const layout = [
-  { finalX: 100, finalY: -140, rotate: 6, zIndex: 10 },    // 1. Supervielle (Arriba Der)
-  { finalX: -140, finalY: -30, rotate: -8, zIndex: 20 },   // 2. Eminent (Medio Izq)
-  { finalX: 110, finalY: 10, rotate: -4, zIndex: 15 },     // 3. Yerba (Medio Der)
-  { finalX: -90, finalY: 150, rotate: 5, zIndex: 30 },     // 4. Rotoplas (Abajo Izq)
-  { finalX: 130, finalY: 170, rotate: -6, zIndex: 25 },    // 5. Baron B (Abajo Der)
+  { id: 'supervielle', title: 'Supervielle', bg: '/SUPERVIELLE.jpg', logo: '/SUPERVIELLE-LOGO.png', finalX: 100, finalY: -140, rotate: 6, zIndex: 10 },
+  { id: 'eminent', title: 'Éminent', bg: '/EMINENT.jpg', logo: '/EMINENT-LOGO.png', finalX: -140, finalY: -30, rotate: -8, zIndex: 20 },
+  { id: 'yerba-mate', title: 'Yerba Mate Argentina', bg: '/YERBA.png', logo: '/YERBA-LOGO.png', finalX: 110, finalY: 10, rotate: -4, zIndex: 15 },
+  { id: 'rotoplas', title: 'Rotoplas', bg: '/ROTOPLAS.jpg', logo: '/ROTOPLAS-LOGO.png', finalX: -90, finalY: 150, rotate: 5, zIndex: 30 },
+  { id: 'baron-b', title: 'Baron B', bg: '/BARON.jpg', logo: '/BARON-LOGO.png', finalX: 130, finalY: 170, rotate: -6, zIndex: 25 },
 ];
 
 export default function ProjectsStack() {
   const sectionRef = useRef<HTMLDivElement>(null);
   
-  // Capturamos el scroll de TODO este bloque inmenso de 300vh
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"]
   });
 
   return (
-    // Contenedor "pista" de scroll (300vh te da 3 pantallas de recorrido para que las cartas caigan cómodas)
     <div ref={sectionRef} className="relative h-[300vh] w-full z-10">
       
-      {/* 
-        CONTENEDOR FIJO (Sticky): Esto se queda clavado en la pantalla.
-        El overflow-hidden acá es MAGIA PURA: corta las cartas invisibles a -1500px para que NO invadan el Hero.
-      */}
+      {/* CONTENEDOR FIJO: El texto no se mueve de la pantalla */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col md:flex-row items-center justify-between max-w-[1400px] mx-auto px-[20px] md:px-[80px]">
         
-        {/* COLUMNA IZQUIERDA: Textos originales, anclados y elevados un poco (-translate-y-10) */}
+        {/* TEXTOS (Fijos a la izquierda) */}
         <div className="w-full md:w-[40%] text-white z-20 -translate-y-10">
           <h2 className="text-[50px] md:text-[70px] font-black tracking-[-1.5px] mb-6 leading-none">Projects.</h2>
           <p className="text-[14px] md:text-[15px] leading-[1.6] font-light max-w-[400px] mb-5 text-white/80">
@@ -50,17 +37,14 @@ export default function ProjectsStack() {
           </p>
         </div>
 
-        {/* COLUMNA DERECHA: El espacio de colisión de las cards */}
+        {/* ZONA DE CARTAS (A la derecha, atadas al scroll) */}
         <div className="w-full md:w-[60%] h-full relative flex items-center justify-center pointer-events-none">
           {projects.map((proj, i) => {
-            // MATEMÁTICA DEL SCROLL (Cascada)
-            // Cada carta arranca un 15% más tarde que la anterior
             const start = i * 0.15;
             const end = start + 0.25;
 
-            // Caen desde Y: -1500px (escondidas arriba del borde) hasta su posición final.
-            const y = useTransform(scrollYProgress, [start, end], [-1500, layout[i].finalY]);
-            // Arrancan grandes (scale: 1.5) y se achican al "estamparse" (scale: 1)
+            // Físicas: caen desde -1500px hasta su coordenada final unificada
+            const y = useTransform(scrollYProgress, [start, end], [-1500, proj.finalY]);
             const scale = useTransform(scrollYProgress, [start, end], [1.5, 1]); 
 
             return (
@@ -69,9 +53,9 @@ export default function ProjectsStack() {
                 style={{ 
                   y, 
                   scale, 
-                  x: layout[i].finalX, 
-                  rotate: layout[i].rotate, 
-                  zIndex: layout[i].zIndex 
+                  x: proj.finalX, 
+                  rotate: proj.rotate, 
+                  zIndex: proj.zIndex 
                 }}
                 className="absolute w-[240px] md:w-[320px] aspect-[4/3] rounded-[16px] overflow-hidden border-[4px] md:border-[6px] border-white/90 bg-white shadow-[0_30px_60px_rgba(0,0,0,0.6)] pointer-events-auto transition-shadow hover:!z-50"
               >
