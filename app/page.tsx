@@ -1,11 +1,15 @@
-import Hero from "@/components/Hero";
-import ProjectsStack from "@/components/ProjectsStack";
-import Footer from "@/components/Footer";
+// app/page.tsx
+import Hero from "./components/Hero";
+import ProjectsStack from "./components/ProjectsStack";
+import Footer from "./components/Footer";
+// Importa el resto de tus componentes...
 
 export default function Home() {
   return (
-    // Agregamos bg-[#1a1a1a] al fondo general por si hay rebote en Safari, no se vea blanco
-    <main className="bg-[#1a1a1a]">
+    <main 
+      className="min-h-screen text-white bg-no-repeat bg-cover bg-center bg-fixed font-sans"
+      style={{ backgroundImage: "url('/bg.jpg')" }}
+    >
       <Hero />
       <ProjectsStack />
       <Footer />
