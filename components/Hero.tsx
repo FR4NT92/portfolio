@@ -17,7 +17,7 @@ export default function Hero() {
         <source src="/VID-HERO.mp4" type="video/mp4" />
       </video>
 
-      {/* 1. TEXTOS (Ubicación intacta) */}
+      {/* 1. TEXTOS (Alineación y diseño intactos) */}
       <div className="absolute right-[5%] md:right-[60px] top-[45%] -translate-y-1/2 flex flex-col items-end z-10">
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
@@ -46,29 +46,28 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* 2. BOTÓN LIQUID GLASS ESTILO APPLE (Elevado para más aire) */}
+      {/* 2. BOTÓN LIQUID GLASS ESTILO APPLE (Ingeniería de solapamiento) */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.5 }}
-        // Elevamos el bottom a 120px en desktop y 15% en mobile
         className="absolute bottom-[15%] md:bottom-[120px] right-[5%] md:right-[60px] z-20"
       >
         <a 
           href="https://mail.google.com/mail/?view=cm&fs=1&to=frantruppa@gmail.com" 
           target="_blank"
           rel="noopener noreferrer"
-          // gap-4 inicial para separar las gotas. Al hacer hover, el gap colapsa a 0 forzando la fusión.
-          className="group flex items-center gap-4 transition-all duration-[700ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:gap-0 cursor-pointer"
+          /* Quitamos el 'gap' para controlar la separación con márgenes exactos */
+          className="group flex items-center cursor-pointer"
         >
           
-          {/* Gotita 1: Ícono */}
+          {/* Gotita 1: Ícono (Tiene z-10 para quedar por encima y tapar la costura) */}
           <div 
-            className="w-[54px] h-[54px] rounded-full flex items-center justify-center
-                       bg-white/5 backdrop-blur-2xl border border-white/20 
-                       shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_32px_rgba(0,0,0,0.1)]
-                       transition-all duration-[700ms] ease-[cubic-bezier(0.4,0,0.2,1)] 
-                       group-hover:rounded-r-none group-hover:border-r-transparent group-hover:bg-white/10"
+            className="relative z-10 w-[54px] h-[54px] rounded-full flex items-center justify-center
+                       bg-white/10 backdrop-blur-2xl border border-white/20 
+                       shadow-[inset_0_1px_2px_rgba(255,255,255,0.5),_0_8px_32px_rgba(0,0,0,0.2)]
+                       transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] 
+                       group-hover:rounded-r-none group-hover:border-r-transparent group-hover:bg-white/20"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white">
               <rect width="20" height="16" x="2" y="4" rx="2"/>
@@ -76,15 +75,15 @@ export default function Hero() {
             </svg>
           </div>
 
-          {/* Gotita 2: Texto */}
+          {/* Gotita 2: Texto (Tiene ml-3 de separación inicial. Al hacer hover pasa a -ml-[1px] forzando una colisión perfecta) */}
           <div 
-            className="h-[54px] px-8 rounded-full flex items-center 
-                       bg-white/5 backdrop-blur-2xl border border-white/20 
-                       shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_32px_rgba(0,0,0,0.1)]
-                       transition-all duration-[700ms] ease-[cubic-bezier(0.4,0,0.2,1)] 
-                       group-hover:rounded-l-none group-hover:border-l-transparent group-hover:bg-white/10"
+            className="relative z-0 h-[54px] px-8 rounded-full flex items-center 
+                       bg-white/10 backdrop-blur-2xl border border-white/20 
+                       shadow-[inset_0_1px_2px_rgba(255,255,255,0.5),_0_8px_32px_rgba(0,0,0,0.2)]
+                       ml-3 transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] 
+                       group-hover:-ml-[1px] group-hover:rounded-l-none group-hover:border-l-transparent group-hover:bg-white/20"
           >
-            <span className="text-white text-[12px] font-medium tracking-[2.5px] uppercase">
+            <span className="text-white text-[12px] font-semibold tracking-[2px] uppercase">
               Contacto
             </span>
           </div>
