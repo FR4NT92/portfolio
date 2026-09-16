@@ -24,7 +24,9 @@ export default function Footer() {
         </a>
 
         <a 
-          href="mailto:frantruppa@gmail.com" 
+          href="https://mail.google.com/mail/?view=cm&fs=1&to=frantruppa@gmail.com" 
+          target="_blank"
+          rel="noopener noreferrer"
           className="border border-[#1a1a1a] bg-transparent py-[10px] px-[34px] rounded-[40px] text-[14px] font-semibold text-[#1a1a1a] no-underline transition-all duration-300 hover:bg-[#1a1a1a] hover:text-white md:order-2 order-1"
         >
           contacto
