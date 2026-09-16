@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-// Lista unificada: Datos + Coordenadas exactas para evitar errores de compilación
 const projects = [
   { id: 'supervielle', title: 'Supervielle', bg: '/SUPERVIELLE.jpg', logo: '/SUPERVIELLE-LOGO.png', finalX: 100, finalY: -140, rotate: 6, zIndex: 10 },
   { id: 'eminent', title: 'Éminent', bg: '/EMINENT.jpg', logo: '/EMINENT-LOGO.png', finalX: -140, finalY: -30, rotate: -8, zIndex: 20 },
@@ -23,10 +22,9 @@ export default function ProjectsStack() {
   return (
     <div ref={sectionRef} className="relative h-[300vh] w-full z-10">
       
-      {/* CONTENEDOR FIJO: El texto no se mueve de la pantalla */}
+      {/* EL CONTENEDOR MÁGICO: sticky frena la pantalla, overflow-hidden corta las cartas antes del Hero */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col md:flex-row items-center justify-between max-w-[1400px] mx-auto px-[20px] md:px-[80px]">
         
-        {/* TEXTOS (Fijos a la izquierda) */}
         <div className="w-full md:w-[40%] text-white z-20 -translate-y-10">
           <h2 className="text-[50px] md:text-[70px] font-black tracking-[-1.5px] mb-6 leading-none">Projects.</h2>
           <p className="text-[14px] md:text-[15px] leading-[1.6] font-light max-w-[400px] mb-5 text-white/80">
@@ -37,13 +35,11 @@ export default function ProjectsStack() {
           </p>
         </div>
 
-        {/* ZONA DE CARTAS (A la derecha, atadas al scroll) */}
         <div className="w-full md:w-[60%] h-full relative flex items-center justify-center pointer-events-none">
           {projects.map((proj, i) => {
             const start = i * 0.15;
             const end = start + 0.25;
 
-            // Físicas: caen desde -1500px hasta su coordenada final unificada
             const y = useTransform(scrollYProgress, [start, end], [-1500, proj.finalY]);
             const scale = useTransform(scrollYProgress, [start, end], [1.5, 1]); 
 
