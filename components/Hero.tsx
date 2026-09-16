@@ -4,8 +4,7 @@ import { motion } from "framer-motion";
 import { useRef } from "react";
 
 export default function Hero() {
-  const heroRef = useRef(null);
-
+const heroRef = useRef<HTMLDivElement>(null);
   return (
     <div ref={heroRef} className="relative w-full h-screen overflow-hidden bg-black">
       
