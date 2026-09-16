@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <main 
       className="min-h-screen text-white bg-no-repeat bg-cover bg-center bg-fixed font-sans"
-      style={{ backgroundImage: "url('/bg.jpg')" }}
+      style={{ backgroundImage: "url('/bg.png')" }}
     >
       <Hero />
       <ProjectsStack />
