@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const projects = [
   { id: 'supervielle', title: 'Supervielle', bg: '/SUPERVIELLE.jpg', logo: '/SUPERVIELLE-LOGO.png' },
@@ -8,86 +9,98 @@ const projects = [
   { id: 'yerba-mate', title: 'Yerba Mate Argentina', bg: '/YERBA.png', logo: '/YERBA-LOGO.png' },
   { id: 'rotoplas', title: 'Rotoplas', bg: '/ROTOPLAS.jpg', logo: '/ROTOPLAS-LOGO.png' },
   { id: 'baron-b', title: 'Baron B', bg: '/BARON.jpg', logo: '/BARON-LOGO.png' },
-  { id: 'reels', title: 'REELS', bg: '/REELS.jpg', text: 'REELS', isComingSoon: true },
 ];
 
-// Configuración matemática del desorden (rotación y desplazamientos X/Y para que parezca un collage)
-const scatterLayout = [
-  { rotate: -6, x: -40, y: 0 },
-  { rotate: 4, x: 50, y: 30 },
-  { rotate: -3, x: -20, y: -20 },
-  { rotate: 5, x: 30, y: 10 },
-  { rotate: -5, x: -30, y: 40 },
-  { rotate: 2, x: 20, y: -10 },
+// Mapeo exacto de la ubicación de cada card simulando tu boceto
+const layout = [
+  { finalX: 80, finalY: -130, rotate: 6, zIndex: 10 },    // Supervielle (Arriba Der)
+  { finalX: -140, finalY: -20, rotate: -8, zIndex: 20 },  // Eminent (Medio Izq)
+  { finalX: 90, finalY: 10, rotate: -4, zIndex: 15 },     // Yerba (Medio Der)
+  { finalX: -80, finalY: 140, rotate: 5, zIndex: 30 },    // Rotoplas (Abajo Izq)
+  { finalX: 120, finalY: 160, rotate: -6, zIndex: 25 },   // Baron B (Abajo Der)
 ];
+
+// Sub-componente para vincular independientemente cada card al scroll
+function ScrollLinkedCard({ proj, index, progress }: { proj: any, index: number, progress: any }) {
+  // Define cuándo empieza y termina de caer cada card (efecto cascada)
+  const start = index * 0.12;
+  const end = start + 0.25;
+
+  // Sincronización milimétrica con el scroll: Caen desde 1000px arriba
+  const y = useTransform(progress, [start, end], [-1000, layout[index].finalY]);
+  const scale = useTransform(progress, [start, end], [1.4, 1]); // Se achican al "estamparse"
+  const opacity = useTransform(progress, [start, start + 0.1], [0, 1]);
+
+  return (
+    <motion.div
+      style={{
+        y, scale, opacity,
+        x: layout[index].finalX,
+        rotate: layout[index].rotate,
+        zIndex: layout[index].zIndex
+      }}
+      className="absolute w-[240px] md:w-[320px] aspect-[4/3] rounded-[16px] overflow-hidden border-[4px] md:border-[6px] border-white/90 bg-white shadow-2xl hover:!z-50 transition-shadow"
+    >
+      <a href={`/proyecto/${proj.id}`} className="block w-full h-full relative group cursor-pointer">
+        <div 
+          className="absolute -inset-[2px] bg-cover bg-center brightness-[0.75] transition-all duration-[800ms] group-hover:scale-[1.05] group-hover:blur-[3px] group-hover:brightness-[0.4]"
+          style={{ backgroundImage: `url(${proj.bg})` }}
+        />
+        <div className="absolute inset-0 flex items-center justify-center z-10 transition-transform duration-[800ms] group-hover:scale-[1.05]">
+          {proj.logo ? (
+            <img src={proj.logo} alt={proj.title} className="max-w-[150px] max-h-[50px] object-contain drop-shadow-[0_2px_15px_rgba(0,0,0,0.6)]" />
+          ) : (
+            <span className="text-[28px] font-black text-white tracking-[2px]">{proj.title}</span>
+          )}
+        </div>
+      </a>
+    </motion.div>
+  );
+}
 
 export default function ProjectsStack() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  
+  // Capturamos el progreso del scroll de todo este contenedor inmenso
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"]
+  });
+
   return (
+    // Altura de 300vh para dar "pista" al scroll y permitir que las animaciones ocurran
     <div 
-      className="relative z-10 bg-[#111] min-h-screen pt-[120px] pb-[200px] px-[20px] md:px-[60px] bg-cover bg-center bg-no-repeat bg-fixed"
+      ref={sectionRef} 
+      className="relative h-[300vh] bg-[#111] w-full bg-cover bg-center bg-fixed"
       style={{ backgroundImage: "url('/bg.png')" }}
     >
-      <section className="max-w-[1200px] mx-auto flex flex-col items-center">
+      {/* Contenedor pegajoso (sticky) que sostiene la vista mientras bajás */}
+      <div className="sticky top-0 h-screen w-full flex flex-col md:flex-row items-center justify-between max-w-[1400px] mx-auto px-[20px] md:px-[80px]">
         
-        {/* TEXTO INTRODUCTORIO (Centrado como en tu boceto) */}
-        <div className="w-full max-w-[800px] mb-20 text-white">
-          <h2 className="text-[48px] md:text-[70px] font-black tracking-[-1.5px] mb-6 leading-none">Projects.</h2>
-          <p className="text-[15px] leading-[1.6] font-light max-w-[450px] mb-5 text-white/80">
-            A lo largo de los años colaboré en diversos proyectos como diseñador, creando piezas de comunicación a medida para cada cliente.
+        {/* COLUMNA IZQUIERDA: Textos originales en su lugar */}
+        <div className="w-full md:w-[40%] mt-20 md:mt-0 text-white z-10">
+          <h2 className="text-[50px] md:text-[70px] font-black tracking-[-1.5px] mb-6 leading-none">Projects.</h2>
+          <p className="text-[14px] md:text-[15px] leading-[1.6] font-light max-w-[400px] mb-5 text-white/80">
+            A lo largo de los años colaboré en diversos proyectos como diseñador freelance, creando piezas de comunicación a medida para cada cliente.
           </p>
-          <p className="text-[15px] leading-[1.6] font-light max-w-[450px] mb-5 text-white/80">
+          <p className="text-[14px] md:text-[15px] leading-[1.6] font-light max-w-[400px] mb-5 text-white/80">
             El objetivo siempre es el mismo: que cada propuesta represente y potencie la identidad de la marca.
           </p>
         </div>
 
-        {/* CONTENEDOR COLLAGE (Cards desordenadas) */}
-        <div className="w-full relative flex flex-wrap justify-center gap-6 md:gap-10">
-          {projects.map((proj, i) => {
-            const layout = scatterLayout[i];
-            
-            return (
-              <motion.div
-                key={proj.id}
-                // EL EFECTO ESTAMPADO: Arranca grande y transparente, y cae con fuerza (spring) al hacer scroll
-                initial={{ opacity: 0, scale: 1.3, rotate: layout.rotate - 10, x: layout.x, y: layout.y + 100 }}
-                whileInView={{ opacity: 1, scale: 1, rotate: layout.rotate, x: layout.x, y: layout.y }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-                className="relative w-full sm:w-[45%] lg:w-[38%] aspect-[4/3] rounded-[16px] overflow-hidden border-[4px] md:border-[6px] border-white/90 bg-white shadow-2xl hover:z-50"
-              >
-                {proj.isComingSoon ? (
-                  <div className="block w-full h-full relative cursor-not-allowed">
-                    <div 
-                      className="absolute -inset-[2px] bg-cover bg-center brightness-[0.5] grayscale-[30%]"
-                      style={{ backgroundImage: `url(${proj.bg})` }}
-                    />
-                    <div className="absolute inset-0 flex flex-col items-center justify-center z-10 gap-2">
-                      <span className="text-[28px] font-black text-white/80 tracking-[2px]">{proj.text}</span>
-                      <span className="text-[10px] font-bold text-white uppercase tracking-[2px] bg-black/50 backdrop-blur-sm px-4 py-1.5 rounded-full">
-                        Próximamente
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <a href={`/proyecto/${proj.id}`} className="block w-full h-full relative group cursor-pointer">
-                    <div 
-                      className="absolute -inset-[2px] bg-cover bg-center brightness-[0.75] transition-all duration-[800ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.05] group-hover:blur-[3px] group-hover:brightness-[0.4]"
-                      style={{ backgroundImage: `url(${proj.bg})` }}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center z-10 transition-transform duration-[800ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.05]">
-                      {proj.logo ? (
-                        <img src={proj.logo} alt={proj.title} className="max-w-[150px] max-h-[50px] object-contain drop-shadow-[0_2px_15px_rgba(0,0,0,0.6)]" />
-                      ) : (
-                        <span className="text-[28px] font-black text-white tracking-[2px]">{proj.text}</span>
-                      )}
-                    </div>
-                  </a>
-                )}
-              </motion.div>
-            );
-          })}
+        {/* COLUMNA DERECHA: El clúster donde colisionan las cards */}
+        <div className="w-full md:w-[60%] h-[60vh] md:h-full relative flex items-center justify-center">
+          {projects.map((proj, i) => (
+            <ScrollLinkedCard 
+              key={proj.id} 
+              proj={proj} 
+              index={i} 
+              progress={scrollYProgress} 
+            />
+          ))}
         </div>
-      </section>
+        
+      </div>
     </div>
   );
 }
