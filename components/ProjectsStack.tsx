@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import Link from "next/link";
 
 const projects = [
   { id: 'supervielle', title: 'Supervielle', bg: '/SUPERVIELLE.jpg', logo: '/SUPERVIELLE-LOGO.png' },
@@ -26,16 +25,11 @@ export default function ProjectsStack() {
     'md:top-[175px]', 'md:top-[200px]', 'md:top-[225px]'
   ];
 
-  // Z-indexes bajos para que queden encapsulados y el Footer los pueda tapar
-  const zIndexes = ['z-[1]', 'z-[2]', 'z-[3]', 'z-[4]', 'z-[5]', 'z-[6]'];
-
   return (
     <div 
       ref={containerRef} 
-      // z-0 encapsula esta sección. Es fundamental para que no pelee con el footer.
-      className="relative z-0 bg-[#e6e6e6] -mt-[60px] rounded-t-[32px] pt-[80px] px-[20px] md:px-[40px]"
+      className="relative z-10 bg-[#e6e6e6] -mt-[60px] rounded-t-[32px] pt-[80px] px-[20px] md:px-[40px]"
     >
-      {/* Volvemos al pb-[35vh] original para no generar vacíos extraños */}
       <section className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start gap-10 pb-[35vh]">
         
         <div className="w-full md:w-[45%] relative md:sticky md:top-[100px] md:pr-5">
@@ -63,9 +57,8 @@ export default function ProjectsStack() {
                 className={`
                   relative md:sticky aspect-[4/3] rounded-[16px] overflow-hidden 
                   border-[6px] border-white bg-white w-full transform-gpu origin-top
-                  /* ELIMINADO el last:mb-0. Ahora la card 6 tiene margen y puede solapar a la 5 */
-                  mb-[25px] md:mb-[25vh]
-                  ${stickyTops[i]} ${zIndexes[i]}
+                  mb-[25px] md:mb-[25vh] last:mb-0
+                  ${stickyTops[i]} z-[${i + 1}]
                 `}
               >
                 {proj.isComingSoon ? (
@@ -82,7 +75,7 @@ export default function ProjectsStack() {
                     </div>
                   </div>
                 ) : (
-                  <Link href={`/proyecto/${proj.id}`} className="block w-full h-full relative group cursor-pointer">
+                  <a href={`/proyecto/${proj.id}`} className="block w-full h-full relative group cursor-pointer">
                     <div 
                       className="absolute -inset-[2px] bg-cover bg-center brightness-[0.65] transition-all duration-[1200ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.03] group-hover:blur-[5px] group-hover:brightness-[0.4]"
                       style={{ backgroundImage: `url(${proj.bg})` }}
@@ -94,7 +87,7 @@ export default function ProjectsStack() {
                         <span className="text-[28px] font-black text-white tracking-[2px]">{proj.text}</span>
                       )}
                     </div>
-                  </Link>
+                  </a>
                 )}
               </motion.div>
             );
