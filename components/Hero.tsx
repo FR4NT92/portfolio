@@ -37,7 +37,7 @@ export default function Hero() {
           <div className="flex items-center gap-3">
             {/* La línea fina de tu diseño original */}
             <span className="w-10 h-[1px] bg-white/70"></span>
-            <p className="text-white/90 text-[16px] md:text-[18px] font-light">
+            <p className="text-white/90 text-[16px] md:text-[18px] font-regular">
               Diseño & Comunicación Visual
             </p>
           </div>
@@ -52,7 +52,7 @@ export default function Hero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.5 }}
-        className="absolute bottom-[5%] md:bottom-[60px] right-[5%] md:right-[60px] z-20"
+        className="absolute bottom-[5%] md:bottom-[48px] right-[5%] md:right-[48px] z-20"
       >
         <a 
           href="mailto:frantruppa@gmail.com" 
