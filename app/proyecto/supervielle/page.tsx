@@ -9,23 +9,26 @@ export default function ProjectPage() {
     '/supervielle/email-1.jpg',
     '/supervielle/email-2.jpg',
     '/supervielle/email-3.jpg',
-    '/supervielle/email-4.jpg',
+    '/supervielle/email-9.jpg',
     '/supervielle/email-5.jpg',
+    '/supervielle/email-10.jpg',
+    '/supervielle/email-7.jpg',
+    '/supervielle/email-8.jpg',
+    '/supervielle/email-4.jpg',
     '/supervielle/email-6.jpg',
-    '/supervielle/email-7.jpg'
   ];
 
   const mediaImages = [
     '/supervielle/paid-1.jpg',
     '/supervielle/paid-2.jpg',
     '/supervielle/paid-3.jpg',
-    '/supervielle/paid-4.jpg',
-    '/supervielle/paid-5.jpg',
     '/supervielle/paid-10.jpg',
+    '/supervielle/paid-5.jpg',
+    '/supervielle/paid-6.jpg',
     '/supervielle/paid-7.jpg',
     '/supervielle/paid-8.jpg',
     '/supervielle/paid-9.jpg',
-    '/supervielle/paid-7.jpg',
+    '/supervielle/paid-4.jpg',
   ];
 
   const webImages = [
@@ -46,7 +49,7 @@ export default function ProjectPage() {
     <main className="min-h-screen bg-[#111] px-[20px] md:px-[40px] pt-[20px] pb-[100px] text-white">
 
       {/* HEADER DEL PROYECTO (TU HERO ORIGINAL INTACTO) */}
-      <div className="relative w-full h-[50vh] md:h-[50vh] rounded-[32px] overflow-hidden bg-[#1a1a1a] shadow-xl">
+      <div className="relative w-full h-[50vh] md:h-[45vh] rounded-[32px] overflow-hidden bg-[#1a1a1a] shadow-xl">
         <img 
           src="/hero-supervielle.jpg" 
           alt="Supervielle Cover" 
