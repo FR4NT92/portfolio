@@ -9,7 +9,6 @@ export default function EminentPage() {
     "/eminent/email-01.jpg",
     "/eminent/email-02.jpg",
     "/eminent/email-03.jpg",
-    "/eminent/email-04.jpg",
   ];
 
   const displayImages = [
