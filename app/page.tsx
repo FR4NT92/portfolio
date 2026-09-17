@@ -4,11 +4,8 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main 
-      // ELIMINADO el overflow-hidden que rompía el anclaje (sticky)
-      className="w-full min-h-screen bg-[#111] bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: "url('/bg.png')" }}
-    >
+    // Agregamos bg-[#1a1a1a] al fondo general por si hay rebote en Safari, no se vea blanco
+    <main className="bg-[#1a1a1a]">
       <Hero />
       <ProjectsStack />
       <Footer />
