@@ -21,9 +21,11 @@ export default function ProjectPage() {
     '/supervielle/paid-3.jpg',
     '/supervielle/paid-4.jpg',
     '/supervielle/paid-5.jpg',
-    '/supervielle/paid-6.jpg',
+    '/supervielle/paid-10.jpg',
     '/supervielle/paid-7.jpg',
     '/supervielle/paid-8.jpg',
+    '/supervielle/paid-9.jpg',
+    '/supervielle/paid-7.jpg',
   ];
 
   const webImages = [
@@ -44,11 +46,11 @@ export default function ProjectPage() {
     <main className="min-h-screen bg-[#111] px-[20px] md:px-[40px] pt-[20px] pb-[100px] text-white">
 
       {/* HEADER DEL PROYECTO (TU HERO ORIGINAL INTACTO) */}
-      <div className="relative w-full h-[50vh] md:h-[45vh] rounded-[32px] overflow-hidden bg-[#1a1a1a] shadow-xl">
+      <div className="relative w-full h-[50vh] md:h-[50vh] rounded-[32px] overflow-hidden bg-[#1a1a1a] shadow-xl">
         <img 
           src="/hero-supervielle.jpg" 
           alt="Supervielle Cover" 
-          className="absolute inset-0 w-full h-full object-cover object-center brightness-[0.8]"
+          className="absolute inset-0 w-full h-full object-cover object-center brightness-[0.5]"
         />
 
         {/* Botón Volver */}
@@ -89,7 +91,7 @@ export default function ProjectPage() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="text-[40px] md:text-[80px] font-black tracking-[-2px] text-white"
+            className="text-[40px] md:text-[80px] font-bold tracking-[0px] text-white"
           >
             .E-mails
           </motion.h2>
@@ -123,7 +125,7 @@ export default function ProjectPage() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="text-[40px] md:text-[80px] font-black tracking-[-2px] text-white leading-none"
+            className="text-[40px] md:text-[80px] font-bold tracking-[0px] text-white leading-none"
           >
             .Paid Media
           </motion.h2>
@@ -164,7 +166,7 @@ export default function ProjectPage() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="text-[40px] md:text-[80px] font-black tracking-[-2px] text-white leading-none"
+            className="text-[40px] md:text-[80px] font-bold tracking-[0px] text-white leading-none"
           >
             .Web
           </motion.h2>
