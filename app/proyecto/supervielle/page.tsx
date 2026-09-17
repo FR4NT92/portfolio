@@ -48,12 +48,12 @@ export default function ProjectPage() {
     <main className="min-h-screen bg-[#111] px-[20px] md:px-[40px] pt-[20px] pb-[100px] text-white">
 
       {/* HEADER DEL PROYECTO (HERO AJUSTADO AL TAMAÑO REAL Y LUZ ORIGINAL) */}
-      <div className="relative w-full rounded-[32px] overflow-hidden shadow-xl bg-transparent">
+      <div className="relative w-full h-[50vh] md:h-[45vh] rounded-[32px] overflow-hidden bg-[#183c6b] shadow-xl">
         <img 
           src="/hero-supervielle.jpg" 
           alt="Supervielle Cover" 
           // w-full y h-auto garantizan que la imagen respete su proporción original exacta
-          className="w-full h-auto block"
+          className="absolute inset-0 w-full h-full object-cover object-center"
         />
 
         {/* Botón Volver */}
