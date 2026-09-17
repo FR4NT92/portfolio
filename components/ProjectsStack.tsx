@@ -9,7 +9,7 @@ const projects = [
   { id: 'yerba-mate', title: 'Yerba Mate Argentina', bg: '/YERBA.png', logo: '/YERBA-LOGO.png' },
   { id: 'rotoplas', title: 'Rotoplas', bg: '/ROTOPLAS.jpg', logo: '/ROTOPLAS-LOGO.png' },
   { id: 'baron-b', title: 'Baron B', bg: '/BARON.jpg', logo: '/BARON-LOGO.png' },
-  { id: 'reels', title: 'REELS', bg: '/REELS.jpg', text: 'REELS', isComingSoon: true },
+  { id: 'reels', title: 'REELS', bg: '/REELS.png', text: 'REELS', isComingSoon: true },
 ];
 
 export default function ProjectsStack() {
