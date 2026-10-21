@@ -1,17 +1,56 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useRef, useState, useEffect, useMemo } from "react";
+
+// Función auxiliar para asignar IDs únicos a las letras (permite el efecto anagrama)
+const generateCharObjects = (str: string) => {
+  const counts: Record<string, number> = {};
+  return str.split("").map((char, i) => {
+    if (char === " ") return { id: `space-${i}`, char };
+    const lower = char.toLowerCase();
+    counts[lower] = (counts[lower] || 0) + 1;
+    return { id: `${lower}-${counts[lower]}`, char };
+  });
+};
+
+const PHRASE_1 = "Diseño & Comunicación Visual";
+const PHRASE_2 = "or any design sh*t";
 
 export default function Hero() {
-  // Referencia estricta para que el sticker sepa cuáles son los límites de la "caja" del video
   const heroRef = useRef<HTMLDivElement>(null);
 
+  // Estados para controlar la animación del subtítulo
+  const [phase, setPhase] = useState<0 | 1 | 2>(0); // 0: Tipeando, 1: Pausa, 2: Transformado
+  const [visibleChars, setVisibleChars] = useState(0);
+
+  // Generamos los objetos con IDs para el motor de Framer Motion
+  const phrase1Objects = useMemo(() => generateCharObjects(PHRASE_1), []);
+  const phrase2Objects = useMemo(() => generateCharObjects(PHRASE_2), []);
+
+  useEffect(() => {
+    if (phase === 0) {
+      // Efecto Typewriter: revelamos letras cada 60ms
+      const interval = setInterval(() => {
+        setVisibleChars((prev) => {
+          if (prev >= phrase1Objects.length - 1) {
+            clearInterval(interval);
+            // Cuando termina de escribir, espera 2.5 segundos y cambia a la frase 2
+            setTimeout(() => setPhase(2), 2500);
+            return prev + 1;
+          }
+          return prev + 1;
+        });
+      }, 60);
+      return () => clearInterval(interval);
+    }
+  }, [phase, phrase1Objects.length]);
+
+  const currentPhraseObjects = phase === 2 ? phrase2Objects : phrase1Objects;
+
   return (
-    // Contenedor principal oscuro que envuelve la tarjeta y empalma perfecto con ProjectsStack
     <div className="w-full bg-[#111] pt-[20px] md:pt-[40px] px-[20px] md:px-[40px] pb-[60px] md:pb-[100px]">
       
-      {/* EL CONTENEDOR DEL VIDEO (La caja redondeada de tu boceto) */}
       <div 
         ref={heroRef} 
         className="relative w-full h-[85vh] md:h-[90vh] rounded-[32px] overflow-hidden bg-black shadow-2xl"
@@ -61,9 +100,38 @@ export default function Hero() {
           >
             <div className="flex items-center gap-3">
               <span className="w-10 h-[1px] bg-white/70"></span>
-              <p className="text-white/90 text-[16px] md:text-[18px] font-light">
-                Diseño & Comunicación Visual
-              </p>
+              
+              {/* SUBTÍTULO ANIMADO (Typewriter + Morphing) */}
+              <div className="text-white/90 text-[16px] md:text-[18px] font-light flex h-[28px] items-center">
+                <AnimatePresence mode="popLayout">
+                  {currentPhraseObjects.map((item, index) => {
+                    // Controlamos la visibilidad para el efecto máquina de escribir en la fase 0
+                    if (phase === 0 && index >= visibleChars) return null;
+
+                    return (
+                      <motion.span
+                        key={item.id}
+                        layoutId={item.id}
+                        layout="position"
+                        initial={{ opacity: 0, y: phase === 0 ? 0 : -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.8 }}
+                        transition={{ 
+                          type: "spring", 
+                          stiffness: 150, 
+                          damping: 20, 
+                          mass: 1 
+                        }}
+                        className={item.char === " " ? "w-1" : "inline-block"}
+                        style={{ whiteSpace: "pre" }}
+                      >
+                        {item.char}
+                      </motion.span>
+                    );
+                  })}
+                </AnimatePresence>
+              </div>
+
             </div>
             <p className="text-white/60 text-[12px] md:text-[13px] font-medium tracking-[1.5px] uppercase mt-1">
               Freelance
@@ -72,7 +140,6 @@ export default function Hero() {
         </div>
 
         {/* 2. BOTÓN LIQUID GLASS ESTILO APPLE */}
-        {/* Subí un poco el bottom en mobile para que no quede tan pegado al borde redondeado */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -83,7 +150,7 @@ export default function Hero() {
             href="https://mail.google.com/mail/?view=cm&fs=1&to=frantruppa@gmail.com" 
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative flex items-center gap-3 transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:gap-0 cursor-pointer"
+            className="group relative flex items-center gap-3 transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:gap-0 cursor-pointer pointer-events-auto"
           >
             
             <div className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:opacity-100 bg-white/5 backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_24px_rgba(0,0,0,0.15)] pointer-events-none"></div>
