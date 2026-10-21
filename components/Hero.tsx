@@ -3,7 +3,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect, useMemo } from "react";
 
-// Función auxiliar para asignar IDs únicos a las letras (permite el efecto anagrama)
 const generateCharObjects = (str: string) => {
   const counts: Record<string, number> = {};
   return str.split("").map((char, i) => {
@@ -19,16 +18,12 @@ const PHRASE_2 = "or any design sh*t";
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
-
-  // Estado simple: falso = Frase 1, verdadero = Frase 2
   const [isAltPhrase, setIsAltPhrase] = useState(false);
 
-  // Generamos los objetos con IDs para el motor de Framer Motion
   const phrase1Objects = useMemo(() => generateCharObjects(PHRASE_1), []);
   const phrase2Objects = useMemo(() => generateCharObjects(PHRASE_2), []);
 
   useEffect(() => {
-    // Loop infinito que cambia la frase cada 4 segundos
     const interval = setInterval(() => {
       setIsAltPhrase((prev) => !prev);
     }, 4000);
@@ -56,17 +51,16 @@ export default function Hero() {
           <source src="/VID-HERO.mp4" type="video/mp4" />
         </video>
 
-        {/* STICKER ARRASTRABLE (Efecto Slap / Estampado sin rebote) */}
+        {/* STICKER ARRASTRABLE (Entrada estática, mantiene física de arrastre) */}
         <motion.div
           drag
           dragConstraints={heroRef}
           dragElastic={0.2}
-          // Simulamos que el papel viene doblado/despegado (rotateY) y se estampa en seco
-          initial={{ opacity: 0, scale: 1.5, rotate: 5, rotateY: 45, skewX: 10 }}
-          animate={{ opacity: 1, scale: 1, rotate: -15, rotateY: 0, skewX: 0 }}
-          transition={{ duration: 0.4, delay: 1, ease: "easeOut" }}
+          initial={{ opacity: 0, rotate: -15 }}
+          animate={{ opacity: 1, rotate: -15 }}
+          transition={{ duration: 1, delay: 0.5 }}
           className="absolute z-30 cursor-grab active:cursor-grabbing"
-          style={{ top: "35%", right: "15%", width: "140px", perspective: 800 }}
+          style={{ top: "35%", right: "15%", width: "140px" }}
         >
           <img src="/sticker.png" alt="Sticker Francisco" className="w-full h-auto drop-shadow-2xl pointer-events-none" />
         </motion.div>
@@ -74,22 +68,12 @@ export default function Hero() {
         {/* 1. TEXTOS */}
         <div className="absolute right-[5%] md:right-[60px] top-[45%] -translate-y-1/2 flex flex-col items-end z-10 pointer-events-none">
           
-          {/* TÍTULO CON ANIMACIÓN TIPOGRÁFICA (Keyframes de pesos) */}
+          {/* TÍTULO (Entrada limpia sin variación de pesos) */}
           <motion.h1 
-            initial={{ opacity: 0, y: 20, fontWeight: 200, fontStyle: "normal" }}
-            animate={{ 
-              opacity: 1, 
-              y: 0,
-              fontWeight: [200, 300, 400, 400, 500, 700, 900],
-              fontStyle: ["normal", "normal", "normal", "italic", "normal", "normal", "normal"]
-            }}
-            transition={{ 
-              duration: 1.5, 
-              ease: "easeInOut",
-              times: [0, 0.15, 0.3, 0.5, 0.65, 0.8, 1] 
-            }}
-            // Sacamos font-black de la clase porque ahora Framer Motion controla el peso final (900)
-            className="text-[14vw] sm:text-[60px] md:text-[90px] lg:text-[110px] text-white leading-none tracking-[-2px] mb-2 md:mb-4 whitespace-nowrap"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
+            className="text-[14vw] sm:text-[60px] md:text-[90px] lg:text-[110px] font-black text-white leading-none tracking-[-2px] mb-2 md:mb-4 whitespace-nowrap"
           >
             FRANCISCO.
           </motion.h1>
@@ -129,7 +113,6 @@ export default function Hero() {
                 </AnimatePresence>
               </div>
             </div>
-            {/* Freelance eliminado */}
           </motion.div>
         </div>
 
