@@ -56,28 +56,40 @@ export default function Hero() {
           <source src="/VID-HERO.mp4" type="video/mp4" />
         </video>
 
-        {/* STICKER ARRASTRABLE (Efecto Slap / Estampado) */}
+        {/* STICKER ARRASTRABLE (Efecto Slap / Estampado sin rebote) */}
         <motion.div
           drag
           dragConstraints={heroRef}
           dragElastic={0.2}
-          initial={{ opacity: 0, scale: 2.5, rotate: 20 }}
-          animate={{ opacity: 1, scale: 1, rotate: -15 }}
-          // stiffness alta y damping ajustado para simular un impacto seco sin tanto rebote
-          transition={{ duration: 0.4, delay: 1, type: "spring", stiffness: 400, damping: 20 }}
+          // Simulamos que el papel viene doblado/despegado (rotateY) y se estampa en seco
+          initial={{ opacity: 0, scale: 1.5, rotate: 5, rotateY: 45, skewX: 10 }}
+          animate={{ opacity: 1, scale: 1, rotate: -15, rotateY: 0, skewX: 0 }}
+          transition={{ duration: 0.4, delay: 1, ease: "easeOut" }}
           className="absolute z-30 cursor-grab active:cursor-grabbing"
-          style={{ top: "35%", right: "15%", width: "140px" }}
+          style={{ top: "35%", right: "15%", width: "140px", perspective: 800 }}
         >
           <img src="/sticker.png" alt="Sticker Francisco" className="w-full h-auto drop-shadow-2xl pointer-events-none" />
         </motion.div>
 
         {/* 1. TEXTOS */}
         <div className="absolute right-[5%] md:right-[60px] top-[45%] -translate-y-1/2 flex flex-col items-end z-10 pointer-events-none">
+          
+          {/* TÍTULO CON ANIMACIÓN TIPOGRÁFICA (Keyframes de pesos) */}
           <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
-            className="text-[60px] md:text-[90px] lg:text-[110px] font-black text-white leading-none tracking-[-2px] mb-4"
+            initial={{ opacity: 0, y: 20, fontWeight: 200, fontStyle: "normal" }}
+            animate={{ 
+              opacity: 1, 
+              y: 0,
+              fontWeight: [200, 300, 400, 400, 500, 700, 900],
+              fontStyle: ["normal", "normal", "normal", "italic", "normal", "normal", "normal"]
+            }}
+            transition={{ 
+              duration: 1.5, 
+              ease: "easeInOut",
+              times: [0, 0.15, 0.3, 0.5, 0.65, 0.8, 1] 
+            }}
+            // Sacamos font-black de la clase porque ahora Framer Motion controla el peso final (900)
+            className="text-[14vw] sm:text-[60px] md:text-[90px] lg:text-[110px] text-white leading-none tracking-[-2px] mb-2 md:mb-4 whitespace-nowrap"
           >
             FRANCISCO.
           </motion.h1>
@@ -99,7 +111,6 @@ export default function Hero() {
                       key={item.id}
                       layoutId={item.id}
                       layout="position"
-                      // Entra directamente sin delay individual
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10, scale: 0.8 }}
@@ -117,11 +128,8 @@ export default function Hero() {
                   ))}
                 </AnimatePresence>
               </div>
-
             </div>
-            <p className="text-white/60 text-[12px] md:text-[13px] font-medium tracking-[1.5px] uppercase mt-1">
-              Freelance
-            </p>
+            {/* Freelance eliminado */}
           </motion.div>
         </div>
 
