@@ -20,33 +20,22 @@ const PHRASE_2 = "or any design sh*t";
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
 
-  // Estados para controlar la animación del subtítulo
-  const [phase, setPhase] = useState<0 | 1 | 2>(0); // 0: Tipeando, 1: Pausa, 2: Transformado
-  const [visibleChars, setVisibleChars] = useState(0);
+  // Estado simple: falso = Frase 1, verdadero = Frase 2
+  const [isAltPhrase, setIsAltPhrase] = useState(false);
 
   // Generamos los objetos con IDs para el motor de Framer Motion
   const phrase1Objects = useMemo(() => generateCharObjects(PHRASE_1), []);
   const phrase2Objects = useMemo(() => generateCharObjects(PHRASE_2), []);
 
   useEffect(() => {
-    if (phase === 0) {
-      // Efecto Typewriter: revelamos letras cada 60ms
-      const interval = setInterval(() => {
-        setVisibleChars((prev) => {
-          if (prev >= phrase1Objects.length - 1) {
-            clearInterval(interval);
-            // Cuando termina de escribir, espera 2.5 segundos y cambia a la frase 2
-            setTimeout(() => setPhase(2), 2500);
-            return prev + 1;
-          }
-          return prev + 1;
-        });
-      }, 60);
-      return () => clearInterval(interval);
-    }
-  }, [phase, phrase1Objects.length]);
+    // Loop infinito que cambia la frase cada 4 segundos
+    const interval = setInterval(() => {
+      setIsAltPhrase((prev) => !prev);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const currentPhraseObjects = phase === 2 ? phrase2Objects : phrase1Objects;
+  const currentPhraseObjects = isAltPhrase ? phrase2Objects : phrase1Objects;
 
   return (
     <div className="w-full bg-[#111] pt-[20px] md:pt-[40px] px-[20px] md:px-[40px] pb-[60px] md:pb-[100px]">
@@ -67,14 +56,15 @@ export default function Hero() {
           <source src="/VID-HERO.mp4" type="video/mp4" />
         </video>
 
-        {/* STICKER ARRASTRABLE */}
+        {/* STICKER ARRASTRABLE (Efecto Slap / Estampado) */}
         <motion.div
           drag
           dragConstraints={heroRef}
           dragElastic={0.2}
-          initial={{ opacity: 0, scale: 0, rotate: -45 }}
+          initial={{ opacity: 0, scale: 2.5, rotate: 20 }}
           animate={{ opacity: 1, scale: 1, rotate: -15 }}
-          transition={{ duration: 1, delay: 1, type: "spring", bounce: 0.5 }}
+          // stiffness alta y damping ajustado para simular un impacto seco sin tanto rebote
+          transition={{ duration: 0.4, delay: 1, type: "spring", stiffness: 400, damping: 20 }}
           className="absolute z-30 cursor-grab active:cursor-grabbing"
           style={{ top: "35%", right: "15%", width: "140px" }}
         >
@@ -101,34 +91,30 @@ export default function Hero() {
             <div className="flex items-center gap-3">
               <span className="w-10 h-[1px] bg-white/70"></span>
               
-              {/* SUBTÍTULO ANIMADO (Typewriter + Morphing) */}
+              {/* SUBTÍTULO ANIMADO (Loop Infinito) */}
               <div className="text-white/90 text-[16px] md:text-[18px] font-light flex h-[28px] items-center">
                 <AnimatePresence mode="popLayout">
-                  {currentPhraseObjects.map((item, index) => {
-                    // Controlamos la visibilidad para el efecto máquina de escribir en la fase 0
-                    if (phase === 0 && index >= visibleChars) return null;
-
-                    return (
-                      <motion.span
-                        key={item.id}
-                        layoutId={item.id}
-                        layout="position"
-                        initial={{ opacity: 0, y: phase === 0 ? 0 : -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.8 }}
-                        transition={{ 
-                          type: "spring", 
-                          stiffness: 150, 
-                          damping: 20, 
-                          mass: 1 
-                        }}
-                        className={item.char === " " ? "w-1" : "inline-block"}
-                        style={{ whiteSpace: "pre" }}
-                      >
-                        {item.char}
-                      </motion.span>
-                    );
-                  })}
+                  {currentPhraseObjects.map((item) => (
+                    <motion.span
+                      key={item.id}
+                      layoutId={item.id}
+                      layout="position"
+                      // Entra directamente sin delay individual
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.8 }}
+                      transition={{ 
+                        type: "spring", 
+                        stiffness: 150, 
+                        damping: 20, 
+                        mass: 1 
+                      }}
+                      className={item.char === " " ? "w-1" : "inline-block"}
+                      style={{ whiteSpace: "pre" }}
+                    >
+                      {item.char}
+                    </motion.span>
+                  ))}
                 </AnimatePresence>
               </div>
 
@@ -152,7 +138,6 @@ export default function Hero() {
             rel="noopener noreferrer"
             className="group relative flex items-center gap-3 transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:gap-0 cursor-pointer pointer-events-auto"
           >
-            
             <div className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:opacity-100 bg-white/5 backdrop-blur-xl border border-white/20 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4),_0_8px_24px_rgba(0,0,0,0.15)] pointer-events-none"></div>
 
             <div className="relative w-[54px] h-[54px] flex items-center justify-center z-10">
