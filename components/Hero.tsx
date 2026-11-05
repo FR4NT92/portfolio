@@ -1,9 +1,8 @@
 "use client";
 
-import { motion, AnimatePresence, useMotionValue, useSpring, useMotionValueEvent } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect, useMemo } from "react";
 
-// --- LÓGICA DE SUBTÍTULO ---
 const generateCharObjects = (str: string) => {
   const counts: Record<string, number> = {};
   return str.split("").map((char, i) => {
@@ -17,65 +16,6 @@ const generateCharObjects = (str: string) => {
 const PHRASE_1 = "Diseño & Comunicación Visual";
 const PHRASE_2 = "or any design sh*t";
 
-// --- MICRO-COMPONENTE: LETRA INTERACTIVA POR PROXIMIDAD ---
-const InteractiveLetter = ({ char, mouseX, mouseY }: { char: string, mouseX: any, mouseY: any }) => {
-  const ref = useRef<HTMLSpanElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  
-  // El peso arranca en 200 (Extralight)
-  const weight = useMotionValue(200); 
-  // Física elástica para que la transición de grosor sea orgánica y fluida
-  const springWeight = useSpring(weight, { stiffness: 400, damping: 30 }); 
-
-  useEffect(() => {
-    if (!ref.current) return;
-    const updatePosition = () => {
-      const rect = ref.current!.getBoundingClientRect();
-      // Calculamos el centro exacto de la letra en la pantalla
-      setPosition({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
-    };
-    updatePosition();
-    window.addEventListener("resize", updatePosition);
-    return () => window.removeEventListener("resize", updatePosition);
-  }, []);
-
-  useMotionValueEvent(mouseX, "change", (latestX) => {
-    const latestY = mouseY.get();
-    // Si el mouse sale de la zona, volvemos todas las letras a peso 200
-    if (latestX === Infinity || latestY === Infinity) {
-      weight.set(200);
-      return;
-    }
-    
-    // Pitágoras: Calculamos la distancia del mouse al centro de esta letra específica
-    const distX = latestX - position.x;
-    const distY = latestY - position.y;
-    const dist = Math.sqrt(distX * distX + distY * distY);
-
-    // 250px es el radio de "influencia" magnética del cursor
-    const maxDist = 250; 
-    if (dist < maxDist) {
-      // Mapeamos la distancia para que el peso suba hasta 900 (Black) mientras más cerca esté
-      const newWeight = 200 + (700 * (1 - dist / maxDist));
-      weight.set(newWeight);
-    } else {
-      weight.set(200);
-    }
-  });
-
-  return (
-    <motion.span
-      ref={ref}
-      style={{ fontWeight: springWeight }}
-      className="inline-block"
-    >
-      {char}
-    </motion.span>
-  );
-};
-
-
-// --- COMPONENTE PRINCIPAL ---
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
   const [isAltPhrase, setIsAltPhrase] = useState(false);
@@ -92,28 +32,11 @@ export default function Hero() {
 
   const currentPhraseObjects = isAltPhrase ? phrase2Objects : phrase1Objects;
 
-  // Variables para rastrear el puntero globalmente
-  const mouseX = useMotionValue(Infinity);
-  const mouseY = useMotionValue(Infinity);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    mouseX.set(e.clientX);
-    mouseY.set(e.clientY);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(Infinity);
-    mouseY.set(Infinity);
-  };
-
   return (
     <div className="w-full bg-[#111] pt-[20px] md:pt-[40px] px-[20px] md:px-[40px] pb-[60px] md:pb-[100px]">
       
-      {/* Contenedor principal que intercepta el mouse */}
       <div 
         ref={heroRef} 
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
         className="relative w-full h-[85vh] md:h-[90vh] rounded-[32px] overflow-hidden bg-black shadow-2xl"
       >
         
@@ -128,7 +51,7 @@ export default function Hero() {
           <source src="/VID-HERO.mp4" type="video/mp4" />
         </video>
 
-        {/* STICKER ARRASTRABLE (Estático al inicio, movible con drag) */}
+        {/* STICKER ARRASTRABLE (Entrada estática, mantiene física de arrastre) */}
         <motion.div
           drag
           dragConstraints={heroRef}
@@ -145,14 +68,15 @@ export default function Hero() {
         {/* 1. TEXTOS */}
         <div className="absolute right-[5%] md:right-[60px] top-[45%] -translate-y-1/2 flex flex-col items-end z-10 pointer-events-none">
           
-          {/* TÍTULO MAGNÉTICO POR PROXIMIDAD */}
-          <div 
-            className="text-[14vw] sm:text-[60px] md:text-[90px] lg:text-[110px] text-white leading-none tracking-[-2px] mb-2 md:mb-4 whitespace-nowrap flex pointer-events-auto cursor-crosshair"
+          {/* TÍTULO (Entrada limpia sin variación de pesos) */}
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
+            className="text-[14vw] sm:text-[60px] md:text-[90px] lg:text-[110px] font-black text-white leading-none tracking-[-2px] mb-2 md:mb-4 whitespace-nowrap"
           >
-            {"FRANCISCO.".split("").map((char, index) => (
-              <InteractiveLetter key={index} char={char} mouseX={mouseX} mouseY={mouseY} />
-            ))}
-          </div>
+            FRANCISCO.
+          </motion.h1>
           
           <motion.div
             initial={{ opacity: 0 }}
