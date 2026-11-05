@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { useRef, useState, useEffect, useMemo } from "react";
 
+// Función auxiliar para asignar IDs únicos a las letras (permite el efecto anagrama)
 const generateCharObjects = (str: string) => {
   const counts: Record<string, number> = {};
   return str.split("").map((char, i) => {
@@ -18,6 +19,8 @@ const PHRASE_2 = "or any design sh*t";
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
+  
+  // Estado para el subtítulo
   const [isAltPhrase, setIsAltPhrase] = useState(false);
 
   const phrase1Objects = useMemo(() => generateCharObjects(PHRASE_1), []);
@@ -31,6 +34,36 @@ export default function Hero() {
   }, []);
 
   const currentPhraseObjects = isAltPhrase ? phrase2Objects : phrase1Objects;
+
+  // --- LÓGICA DEL MOUSE MAGNÉTICO 3D ---
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  // Springs para suavizar el seguimiento del mouse
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
+
+  // Mapeo de coordenadas a grados de inclinación (max 15 grados)
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    // Convertimos la posición a valores entre -0.5 y 0.5
+    x.set(mouseX / width - 0.5);
+    y.set(mouseY / height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    // Restaurar a la posición inicial al salir
+    x.set(0);
+    y.set(0);
+  };
 
   return (
     <div className="w-full bg-[#111] pt-[20px] md:pt-[40px] px-[20px] md:px-[40px] pb-[60px] md:pb-[100px]">
@@ -65,15 +98,21 @@ export default function Hero() {
           <img src="/sticker.png" alt="Sticker Francisco" className="w-full h-auto drop-shadow-2xl pointer-events-none" />
         </motion.div>
 
-        {/* 1. TEXTOS */}
-        <div className="absolute right-[5%] md:right-[60px] top-[45%] -translate-y-1/2 flex flex-col items-end z-10 pointer-events-none">
+        {/* 1. TEXTOS CON EFECTO MAGNÉTICO 3D */}
+        <div 
+          className="absolute right-[5%] md:right-[60px] top-[45%] -translate-y-1/2 flex flex-col items-end z-10"
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          style={{ perspective: 1000 }} // Añade profundidad a la cámara 3D
+        >
           
-          {/* TÍTULO (Entrada limpia sin variación de pesos) */}
+          {/* TÍTULO */}
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
-            className="text-[14vw] sm:text-[60px] md:text-[90px] lg:text-[110px] font-black text-white leading-none tracking-[-2px] mb-2 md:mb-4 whitespace-nowrap"
+            style={{ rotateX, rotateY }}
+            className="text-[14vw] sm:text-[60px] md:text-[90px] lg:text-[110px] font-black text-white leading-none tracking-[-2px] mb-2 md:mb-4 whitespace-nowrap cursor-default"
           >
             FRANCISCO.
           </motion.h1>
@@ -82,7 +121,8 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="flex flex-col items-end"
+            style={{ rotateX, rotateY }}
+            className="flex flex-col items-end pointer-events-none"
           >
             <div className="flex items-center gap-3">
               <span className="w-10 h-[1px] bg-white/70"></span>
